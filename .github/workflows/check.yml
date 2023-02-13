@@ -1,0 +1,31 @@
+name: Check
+on:
+  workflow_dispatch:
+    inputs:
+      type:
+        description: 'type'
+        default: 'x86'
+        required: true
+        type: choice
+        options:
+        - 'x86'
+        - 't31'
+        - '16e'
+        - '16d'
+      aliyuntk:
+        description: 'aliyuntk'
+        default: ''
+        required: false
+jobs:
+  run:
+    runs-on: ubuntu-18.04
+    steps:
+    - name: Checkout-${{ github.event.inputs.type }}
+      uses: actions/checkout@v3
+    - name: Build-${{ github.event.inputs.type }}
+      run: chmod 777 ./auto_gen.sh && ./auto_gen.sh
+    - name: Upload artifact
+      uses: actions/upload-artifact@master
+      with:
+        name: outfile-${{ github.event.inputs.type }}
+        path: ./output/
