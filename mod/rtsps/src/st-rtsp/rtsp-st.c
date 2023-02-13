@@ -228,8 +228,12 @@ static void* rtsp_st_thread(void *param)
     return NULL;
   }
   
+#ifdef GSF_CPU_x86
+  void *l = st_rtsp_server_listen(NULL, 8554);
+#else
   void *l = st_rtsp_server_listen(NULL, 554);
   void *c = st_rtsp_ctl_listen("127.0.0.1", 127);
+#endif
 
   *run_flag = 1;
   while(1)
@@ -691,7 +695,7 @@ static void* st_rtsp_ctl_listen(char *ip, unsigned short port)
 
   if (setsockopt(sock, SOL_SOCKET, SO_REUSEPORT, (char *)&n, sizeof(n))<0) {
     printf("setsockopt SO_REUSEPORT err.\n");
-    return NULL;
+    //return NULL;
   }
   
   if (bind(sock, (struct sockaddr *)&lcl_addr, sizeof(lcl_addr)) < 0) {

@@ -7,7 +7,9 @@
 
 
 ####################Variables Definition##########################
-
+#maohw
+basepath=$(cd `dirname $0`; pwd)
+cd $basepath
 
 SNS_TYPE0=imx307;           # sensor type
 YUV_TYPE0=0;                # 0 -- raw, 1 --DC, 2 --bt1120, 3 --bt656

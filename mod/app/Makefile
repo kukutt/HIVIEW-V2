@@ -15,7 +15,7 @@ INCS := -I$(HOME) -Isrc -Iinc \
 SRCS := $(shell find src -type f -name "*.c" -o -name "*.cpp")
 OBJS := $(patsubst %.c, %.o, $(SRCS))
 
-LIBS += -L$(HOME)/lib/$(GSF_CPU_ARCH) -Llittlevgl -llittlevgl -llvgl -lcomm -lcfifo -lrt -lnm -lcjson -lm -lpthread
+LIBS += -L$(HOME)/lib/$(GSF_CPU_ARCH) -Llittlevgl -llittlevgl -llvgl -lfreetype -lcomm -lcfifo -lrt -lnm -lcjson -lm -lpthread
 
 #FreeType
 #export EXTRA_CFLAGS = -DEXTRA_FREETYPE

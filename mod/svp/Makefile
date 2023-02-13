@@ -25,7 +25,7 @@ SRCS := $(shell find $(GSF_CPU_ARCH) -type f -name "*.c" -o -name "*.cpp")
 #OBJS := $(patsubst %.c, %.o, $(SRCS))
 OBJS = $(addsuffix .o, $(basename $(SRCS)))
 
-LIBS += -L$(HOME)/lib/$(GSF_CPU_ARCH) -lmpp -lrt -lnm -lcjson -lm -lpthread
+LIBS += -L$(HOME)/lib/$(GSF_CPU_ARCH) -Wl,--allow-shlib-undefine -lmpp -lrt -lnm -lcjson -lm -lpthread
 
 ifeq ($(GSF_CPU_ARCH), 3516a)
 LIBS += -L$(HOME)/mod/mpp/$(GSF_CPU_ARCH)/lib/hisisdk -lisp -l_hiae -l_hiawb -lhdmi -l_hidrc -l_hildci -l_hidehaze -lsecurec \

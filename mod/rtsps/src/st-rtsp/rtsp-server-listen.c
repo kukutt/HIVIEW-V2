@@ -109,7 +109,7 @@ void* rtsp_server_listen(const char* ip, int port, struct st_rtsp_handler_t* han
   
   if (setsockopt(sock, SOL_SOCKET, SO_REUSEPORT, (char *)&n, sizeof(n))<0) {
     printf("setsockopt SO_REUSEPORT err.\n");
-    return NULL;
+    //return NULL;
   }
   
   if (bind(sock, (struct sockaddr *)&lcl_addr, sizeof(lcl_addr)) < 0) {

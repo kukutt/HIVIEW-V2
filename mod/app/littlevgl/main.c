@@ -139,7 +139,11 @@ static void* lvgl_main(void* p)
     lv_disp_buf_init(&disp_buf, buf, NULL, DISP_BUF_SIZE);
     
     disp_drv.buffer = &disp_buf;
+#if defined(GSF_CPU_3516e) || defined(GSF_CPU_x86)
+    disp_drv.flush_cb = fbdev_flush;
+#else
     disp_drv.flush_cb = lv_push_osd?fb_flush:fbdev_flush;
+#endif
     lv_disp_drv_register(&disp_drv);
      
     mouse_hid_init();

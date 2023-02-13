@@ -511,7 +511,9 @@ static int rtp_live_add_transport(struct rtp_media_t* _m, const char* track, str
 {
   struct rtp_media_live_t *m = (struct rtp_media_live_t*)_m;
   
-  int id = strstr(track, "video")?MEDIA_TRACK_VIDEO:
+  int id = strstr(track, "trackID=0")?MEDIA_TRACK_VIDEO:
+           strstr(track, "trackID=1")?MEDIA_TRACK_AUDIO:
+           strstr(track, "video")?MEDIA_TRACK_VIDEO:
            strstr(track, "audio")?MEDIA_TRACK_AUDIO:
            strstr(track, "meta")?MEDIA_TRACK_META:-1;
 

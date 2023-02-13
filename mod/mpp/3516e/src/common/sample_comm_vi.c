@@ -4037,10 +4037,15 @@ HI_VOID SAMPLE_COMM_VI_GetSensorInfo(SAMPLE_VI_CONFIG_S *pstViConfig)
         pstViConfig->astViInfo[i].stPipeInfo.bMultiPipe = HI_FALSE;
         pstViConfig->astViInfo[i].stPipeInfo.bVcNumCfged = HI_FALSE;
     }
-
+#ifdef HISISDK
+    pstViConfig->astViInfo[0].stSnsInfo.enSnsType = SENSOR0_TYPE_D;
+    //maohw
+    printf("%s => SENSOR0_TYPE:[%d]\n", __func__, SENSOR0_TYPE_D);
+#else
     pstViConfig->astViInfo[0].stSnsInfo.enSnsType = SENSOR0_TYPE;
     //maohw
     printf("%s => SENSOR0_TYPE:[%d]\n", __func__, SENSOR0_TYPE);
+#endif
 }
 
 combo_dev_t SAMPLE_COMM_VI_GetComboDevBySensor(SAMPLE_SNS_TYPE_E enMode, HI_S32 s32SnsIdx)

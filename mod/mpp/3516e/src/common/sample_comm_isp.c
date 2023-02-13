@@ -32,10 +32,10 @@ extern "C" {
 static pthread_t    g_IspPid[ISP_MAX_DEV_NUM] = {0};
 static HI_U32       g_au32IspSnsId[ISP_MAX_DEV_NUM] = {0, 1};
 
-#if 0 //maohw
+#ifdef HISISDK //maohw
 SAMPLE_SNS_TYPE_E g_enSnsType[MAX_SENSOR_NUM] =
 {
-    SENSOR0_TYPE,
+    SENSOR0_TYPE_D,
 };
 #endif
 
@@ -174,7 +174,7 @@ ISP_PUB_ATTR_S ISP_PUB_ATTR_IMX335_MIPI_4M_30FPS =
 {
     {0, 0, 2592, 1520},
     {2592, 1520},
-    30,
+    30, /* fps_change */
     BAYER_RGGB,
     WDR_MODE_NONE,
     0,
@@ -306,7 +306,8 @@ HI_S32 SAMPLE_COMM_ISP_GetIspAttrBySns(SAMPLE_SNS_TYPE_E enSnsType, ISP_PUB_ATTR
 
     return HI_SUCCESS;
 }
-#if 0 //maohw
+
+#ifdef HISISDK //maohw
 ISP_SNS_OBJ_S *SAMPLE_COMM_ISP_GetSnsObj(HI_U32 u32SnsId)
 {
     SAMPLE_SNS_TYPE_E enSnsType;
@@ -321,7 +322,7 @@ ISP_SNS_OBJ_S *SAMPLE_COMM_ISP_GetSnsObj(HI_U32 u32SnsId)
 
         case SMART_SC2231_MIPI_2M_30FPS_10BIT:
             return &stSnsSc2231Obj;
-
+#if 0
         case SMART_SC2335_MIPI_2M_30FPS_10BIT:
             return  &stSnsSc2335Obj;
 
@@ -330,7 +331,7 @@ ISP_SNS_OBJ_S *SAMPLE_COMM_ISP_GetSnsObj(HI_U32 u32SnsId)
 
         case SMART_AR0130_DC_1M_30FPS_12BIT:
             return &stSnsAr0130Obj;
-        
+#endif
         case SMART_SC2235_DC_2M_30FPS_10BIT:
             return &stSnsSc2235Obj;
 

@@ -22,7 +22,7 @@ INCS := -I$(HOME) -I$(GSF_DEV_TYPE) -Iinc \
 SRCS := $(shell find $(GSF_DEV_TYPE) -type f -name "*.c" -o -name "*.cpp")
 OBJS := $(patsubst %.c, %.o, $(SRCS))
 
-LIBS += -L$(HOME)/lib/$(GSF_CPU_ARCH) -lcomm -lpthread -lfont -lmpp -lcfifo -lrt -lnm -lcjson -lm
+LIBS += -Wl,--allow-shlib-undefine -L$(HOME)/lib/$(GSF_CPU_ARCH) -lcomm -lpthread -lfont -lmpp -lcfifo -lrt -lnm -lcjson -lm
          
 ifeq ($(GSF_CPU_ARCH), 3516a)
 LIBS += -L$(HOME)/mod/mpp/$(GSF_CPU_ARCH)/lib/hisisdk -lisp -l_hiae -l_hiawb -lhdmi -l_hidrc -l_hildci -l_hidehaze -lsecurec \

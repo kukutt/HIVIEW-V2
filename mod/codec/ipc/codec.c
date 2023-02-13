@@ -29,11 +29,16 @@ static int avs = 0; // codec_ipc.vi.avs;
 #define PIC_400P PIC_CIF
 #endif
 
+#ifdef GSF_CPU_3516e
+#define PIC_512P PIC_400P
+#endif
+
 #define PIC_WIDTH(w, h) \
           (w >= 7680)?PIC_7680x4320:\
           (w >= 3840)?PIC_3840x2160:\
           (w >= 2592 && h >= 1944)?PIC_2592x1944:\
           (w >= 2592 && h >= 1536)?PIC_2592x1536:\
+          (w >= 2592 && h >= 1520)?PIC_2592x1520:\
           (w >= 1920)?PIC_1080P:\
           (w >= 1280)?PIC_720P: \
           (w >= 720 && h >= 576)?PIC_D1_PAL: \
@@ -47,6 +52,7 @@ static gsf_resolu_t __pic_wh[PIC_BUTT] = {
       [PIC_3840x2160] = {0, 3840, 2160},
       [PIC_2592x1944] = {0, 2592, 1944},
       [PIC_2592x1536] = {0, 2592, 1536},
+      [PIC_2592x1520] = {0, 2592, 1520},
       [PIC_1080P]     = {0, 1920, 1080},
       [PIC_720P]      = {0, 1280, 720},
       [PIC_D1_PAL]    = {0, 720, 576},
@@ -364,7 +370,9 @@ int venc_start(int start)
       .u32FrameRate = codec_ipc.venc[j].fps,
       .u32Gop       = codec_ipc.venc[j].gop,
       .u32BitRate   = codec_ipc.venc[j].bitrate,
+#ifndef GSF_CPU_3516e
       .u32LowDelay   = codec_ipc.venc[j].lowdelay,
+#endif
     };
 
     if(avs == 1)
@@ -743,10 +751,10 @@ void mpp_ini_3516d(gsf_mpp_cfg_t *cfg, gsf_rgn_ini_t *rgn_ini, gsf_venc_ini_t *v
 void mpp_ini_3516e(gsf_mpp_cfg_t *cfg, gsf_rgn_ini_t *rgn_ini, gsf_venc_ini_t *venc_ini, gsf_mpp_vpss_t *vpss)
 {
   // sc2335-0-0-2-30
-  cfg->lane = 0; cfg->wdr = 0; cfg->res = 2; cfg->fps = 30;
+  cfg->lane = 0; cfg->wdr = 0; cfg->res = 4; cfg->fps = 30;
   rgn_ini->ch_num = 1; rgn_ini->st_num = 2;
   venc_ini->ch_num = 1; venc_ini->st_num = 2;
-  VPSS(0, 0, 0, 0, 1, 1, PIC_1080P, PIC_720P); 
+  VPSS(0, 0, 0, 0, 1, 1, PIC_2592x1520, PIC_720P); 
 }
 #endif
 
@@ -772,6 +780,28 @@ void mpp_ini_3531d(gsf_mpp_cfg_t *cfg, gsf_rgn_ini_t *rgn_ini, gsf_venc_ini_t *v
 
 #if defined(GSF_CPU_3403)
 void mpp_ini_3403(gsf_mpp_cfg_t *cfg, gsf_rgn_ini_t *rgn_ini, gsf_venc_ini_t *venc_ini, gsf_mpp_vpss_t *vpss)
+{
+  // os08a20-0-0-8-30
+  cfg->lane = 0; cfg->wdr = 0; cfg->res = 8; cfg->fps = 30;
+  rgn_ini->ch_num = 1; rgn_ini->st_num = 2;
+  venc_ini->ch_num = 1; venc_ini->st_num = 2;
+  VPSS(0, 0, 0, 0, 1, 1, PIC_3840x2160, PIC_1080P);
+}
+#endif
+
+#if defined(GSF_CPU_x86)
+void mpp_ini_x86(gsf_mpp_cfg_t *cfg, gsf_rgn_ini_t *rgn_ini, gsf_venc_ini_t *venc_ini, gsf_mpp_vpss_t *vpss)
+{
+  // os08a20-0-0-8-30
+  cfg->lane = 0; cfg->wdr = 0; cfg->res = 8; cfg->fps = 30;
+  rgn_ini->ch_num = 1; rgn_ini->st_num = 2;
+  venc_ini->ch_num = 1; venc_ini->st_num = 2;
+  VPSS(0, 0, 0, 0, 1, 1, PIC_3840x2160, PIC_1080P);
+}
+#endif
+
+#if defined(GSF_CPU_t31)
+void mpp_ini_t31(gsf_mpp_cfg_t *cfg, gsf_rgn_ini_t *rgn_ini, gsf_venc_ini_t *venc_ini, gsf_mpp_vpss_t *vpss)
 {
   // os08a20-0-0-8-30
   cfg->lane = 0; cfg->wdr = 0; cfg->res = 8; cfg->fps = 30;
@@ -848,6 +878,14 @@ int mpp_start(gsf_bsp_def_t *def)
         cfg.hnr = codec_ipc.vi.hnr;
         mpp_ini_3403(&cfg, &rgn_ini, &venc_ini, vpss);
       }
+      #elif defined(GSF_CPU_x86)
+      {
+        mpp_ini_x86(&cfg, &rgn_ini, &venc_ini, vpss);
+      }
+      #elif defined(GSF_CPU_t31)
+      {
+        mpp_ini_t31(&cfg, &rgn_ini, &venc_ini, vpss);
+      }
       #else
       {
         #error "error unknow gsf_mpp_cfg_t."
@@ -877,7 +915,8 @@ int mpp_start(gsf_bsp_def_t *def)
         .u32SupplementConfig = 0,
         #if defined(GSF_CPU_3516e)
         .vpss_en = {1, 1,},
-        .vpss_sz = {PIC_1080P, PIC_720P,},
+        .vpss_sz = {PIC_2592x1520, PIC_720P,},
+        //.vpss_sz = {PIC_1080P, PIC_720P,},
         #elif defined(GSF_CPU_3403)
         .venc_pic_size = {PIC_3840x2160, PIC_1080P},
         #endif
@@ -1009,7 +1048,6 @@ int mpp_start(gsf_bsp_def_t *def)
 
 int vo_start()
 {
-    #if defined(GSF_CPU_3516d) || defined(GSF_CPU_3559) || defined(GSF_CPU_3559a) || defined(GSF_CPU_3403)
     //aenc;
     if( codec_ipc.aenc.en)
     {
@@ -1026,6 +1064,7 @@ int vo_start()
       gsf_mpp_audio_start(&aenc);
       //gsf_mpp_audio_start(NULL);
     }
+    #if defined(GSF_CPU_3516d) || defined(GSF_CPU_3559) || defined(GSF_CPU_3559a) || defined(GSF_CPU_3403)
 
     if(codec_ipc.vo.intf < 0)
     {
@@ -1164,8 +1203,10 @@ int main(int argc, char *argv[])
     extern int vdec_start();
     if(vdec_start() < 0)
     {
+#ifndef GSF_CPU_3516e
       gsf_mpp_ao_bind(SAMPLE_AUDIO_INNER_AO_DEV, 0, SAMPLE_AUDIO_INNER_AI_DEV, 0);
       gsf_mpp_ao_bind(SAMPLE_AUDIO_INNER_HDMI_AO_DEV, 0, SAMPLE_AUDIO_INNER_AI_DEV, 0);
+#endif
     }
     
     //init listen;

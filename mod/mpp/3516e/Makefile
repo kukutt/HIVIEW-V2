@@ -12,7 +12,7 @@ TARG := lib/libmpp.so
 INCS := -I$(HOME) -Isrc -Iinc -Iinc/hisisdk -Iinc/common -Iinc/scene_auto
 
 #SRCS := $(shell ls src/*.c)
-SUBDIRS=$(shell find ./src/ -maxdepth 7 -type d)
+SUBDIRS=$(shell find ./src/ -maxdepth 7 -type d -not -path "*src/sdktest_*")
 SRCS:=$(foreach dir,$(SUBDIRS),$(wildcard $(dir)/*.c))
 	  
 OBJS := $(patsubst %.c, %.o, $(SRCS))

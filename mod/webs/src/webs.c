@@ -113,6 +113,37 @@ static int reg2bsp()
   return 0;
 }
 
+static int makeln(const char *dstpath){
+    DIR *pDir;
+    struct dirent *ent;
+    char cmdstr[160]; 
+    char srcpath[64];
+
+    if ((srcpath == NULL) || (dstpath == NULL))return -1;
+
+    proc_absolute_path(srcpath);
+    sprintf(srcpath, "%s/../www/", srcpath);
+
+    snprintf(cmdstr, sizeof(cmdstr), "rm -rf %s;mkdir %s", dstpath, dstpath);
+    printf("makeln[%s]\r\n", cmdstr);
+    system(cmdstr);
+
+    pDir=opendir(srcpath);
+    while((ent=readdir(pDir))!=NULL){ 
+        if(strcmp(ent->d_name,".")==0 || strcmp(ent->d_name,"..")==0){
+            continue;
+        }else{
+            snprintf(cmdstr, sizeof(cmdstr), "ln -s %s/%s %s/%s", srcpath, ent->d_name, dstpath, ent->d_name);
+            printf("makeln[%s]\r\n", cmdstr);
+            system(cmdstr);
+        }
+    }
+    sprintf(cmdstr, "ln -s /mnt/rec00000001/data %s/rec", dstpath);
+    printf("makeln[%s]\r\n", cmdstr);
+    system(cmdstr);
+    return 0;
+}
+
 int main(int argc, char *argv[])
 {
   if(argc < 2)
@@ -130,17 +161,18 @@ int main(int argc, char *argv[])
   info("cfg.port:%d, cfg.auth:%d\n", webs_cfg.port, webs_cfg.auth);
 
   //add reclink to /mnt/rec00000001/data;
-  char reclink[128] = {0};
-  char home_path[128] = {0};
-  proc_absolute_path(home_path);
-  sprintf(reclink, "%s/../www/rec", home_path);
-  if(access(reclink, 0) == -1)
-  {
-    char cmdstr[256] = {0};
-    sprintf(cmdstr, "ln -s /mnt/rec00000001/data %s", reclink);
-    printf("cmdstr[%s]\n", cmdstr);
-    system(cmdstr);
-  }
+  // char reclink[128] = {0};
+  // char home_path[128] = {0};
+  // proc_absolute_path(home_path);
+  // sprintf(reclink, "%s/../www/rec", home_path);
+  // if(access(reclink, 0) == -1)
+  // {
+  //   char cmdstr[256] = {0};
+  //   sprintf(cmdstr, "ln -s /mnt/rec00000001/data %s", reclink);
+  //   printf("cmdstr[%s]\n", cmdstr);
+  //   system(cmdstr);
+  // }
+  makeln("/tmp/www_root");
   
   //nanomsg port; you can use chrome to open index.html to test;
   web_pub  = nm_pub_listen("ws://*:7789");

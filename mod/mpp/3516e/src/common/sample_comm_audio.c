@@ -44,6 +44,9 @@ typedef struct tagSAMPLE_AENC_S
     HI_S32  AdChn;
     FILE*    pfd;
     HI_BOOL bSendAdChn;
+    AENC_CHN_ATTR_S stAencAttr;
+    void *uargs;
+    int (*cb)(AENC_CHN AeChn, PAYLOAD_TYPE_E PT, AUDIO_STREAM_S* pstStream, void* uargs);
 } SAMPLE_AENC_S;
 
 typedef struct tagSAMPLE_AI_S
@@ -595,6 +598,7 @@ void* SAMPLE_COMM_AUDIO_AencProc(void* parg)
     AencFd = HI_MPI_AENC_GetFd(pstAencCtl->AeChn);
     FD_SET(AencFd, &read_fds);
 
+
     while (pstAencCtl->bStart)
     {
         TimeoutVal.tv_sec = 1;
@@ -627,6 +631,7 @@ void* SAMPLE_COMM_AUDIO_AencProc(void* parg)
             }
 
             /* send stream to decoder and play for testing */
+            #if 0
             if (HI_TRUE == pstAencCtl->bSendAdChn)
             {
                 s32Ret = HI_MPI_ADEC_SendStream(pstAencCtl->AdChn, &stStream, HI_TRUE);
@@ -638,11 +643,25 @@ void* SAMPLE_COMM_AUDIO_AencProc(void* parg)
                     return NULL;
                 }
             }
+            #endif
 
+            uint8_t *p = stStream.pStream;
+            //printf("a seq:%d, t=%lld, len=%d [%02x%02x%02x%02x%02x%02x%02x%02x%02x]\r\n", stStream.u32Seq, stStream.u64TimeStamp, stStream.u32Len, \
+                p[0], p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[8]);
             /* save audio stream to file */
-            (HI_VOID)fwrite(stStream.pStream, 1, stStream.u32Len, pstAencCtl->pfd);
+            if (pstAencCtl->pfd){
+                (HI_VOID)fwrite(stStream.pStream, 1, stStream.u32Len, pstAencCtl->pfd);
+            }
 
-            fflush(pstAencCtl->pfd);
+            
+            if(pstAencCtl->cb)
+            {
+                stStream.pStream += 4;
+                stStream.u32Len -= 4;
+                pstAencCtl->cb(pstAencCtl->AeChn, pstAencCtl->stAencAttr.enType, &stStream, pstAencCtl->uargs);
+            }
+
+            if (pstAencCtl->pfd)fflush(pstAencCtl->pfd);
 
             /* finally you must release the stream */
             s32Ret = HI_MPI_AENC_ReleaseStream(pstAencCtl->AeChn, &stStream);
@@ -656,8 +675,12 @@ void* SAMPLE_COMM_AUDIO_AencProc(void* parg)
         }
     }
 
-    fclose(pstAencCtl->pfd);
+    if (pstAencCtl->pfd) fclose(pstAencCtl->pfd);
     pstAencCtl->bStart = HI_FALSE;
+
+    while(1){
+        sleep(1);
+    }
     return NULL;
 }
 
@@ -844,10 +867,10 @@ HI_S32 SAMPLE_COMM_AUDIO_CreatTrdAencAdec(AENC_CHN AeChn, ADEC_CHN AdChn, FILE* 
 {
     SAMPLE_AENC_S* pstAenc = NULL;
 
-    if (NULL == pAecFd)
-    {
-        return HI_FAILURE;
-    }
+    // if (NULL == pAecFd)
+    // {
+    //     return HI_FAILURE;
+    // }
 
     pstAenc = &gs_stSampleAenc[AeChn];
     pstAenc->AeChn = AeChn;
@@ -858,6 +881,16 @@ HI_S32 SAMPLE_COMM_AUDIO_CreatTrdAencAdec(AENC_CHN AeChn, ADEC_CHN AdChn, FILE* 
     pthread_create(&pstAenc->stAencPid, 0, SAMPLE_COMM_AUDIO_AencProc, pstAenc);
 
     return HI_SUCCESS;
+}
+
+HI_S32 SAMPLE_COMM_AUDIO_CreatTrdAencAdecCb(AENC_CHN AeChn, int (*cb)(AENC_CHN AeChn, PAYLOAD_TYPE_E PT, AUDIO_STREAM_S* pstStream, void* uargs), void *uargs)
+{
+  SAMPLE_AENC_S* pstAenc = NULL;
+  pstAenc = &gs_stSampleAenc[AeChn];
+  pstAenc->cb = cb;
+  pstAenc->uargs = uargs;
+  //FILE *fp = fopen("/tmp/aaaa.g711", "wb");
+  return SAMPLE_COMM_AUDIO_CreatTrdAencAdec(AeChn, -1, NULL);
 }
 
 /******************************************************************************
@@ -1481,6 +1514,7 @@ HI_S32 SAMPLE_COMM_AUDIO_StartAenc(HI_S32 s32AencChnCnt, AIO_ATTR_S *pstAioAttr,
     for (i = 0; i < s32AencChnCnt; i++)
     {
         AeChn = i;
+        gs_stSampleAenc[AeChn].stAencAttr = stAencAttr;
 
         /* create aenc chn*/
         s32Ret = HI_MPI_AENC_CreateChn(AeChn, &stAencAttr);

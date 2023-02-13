@@ -263,7 +263,6 @@ int rtc_set(gsf_time_t *gsf)
 int ntp_set(gsf_ntp_t *ntp)
 {
   system("killall watch ntpd");
-  
   if(ntp->prog > 0)
   {
     //hwclock -s; ntpd -qNn -p 0.cn.pool.ntp.org; hwclock -w;
@@ -272,12 +271,13 @@ int ntp_set(gsf_ntp_t *ntp)
     sprintf(cmd, "echo \"%s\" > /etc/ntp.conf", ntp->server1);
     system(cmd);
     
-    sprintf(cmd, "echo \"$s\" >> /etc/ntp.conf", ntp->server2);
-    system(cmd);
+    //sprintf(cmd, "echo \"$s\" >> /etc/ntp.conf", ntp->server2);
+    //system(cmd);
     
     system("hwclock -s");
-    
-    sprintf(cmd, "watch -n %d \"ntpd -qNn &> /dev/null; hwclock -w;\" &> /dev/null &", ntp->prog);
+   
+    char *server = strchr(ntp->server1, ' ');
+    sprintf(cmd, "watch -n %d \"ntpd -qNn -p %s &> /dev/nullll; hwclock -w;\" &> /dev/null &", ntp->prog, server);
     system(cmd);
   }
   

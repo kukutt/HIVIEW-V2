@@ -975,7 +975,8 @@ int get_vsc_profiles(int chs, video_source_conf_t *info, int num)
     strcpy(info->vname, name);
     strcpy(info->vtoken, token);
     strcpy(info->vsourcetoken, sourcetoken);
-    sprintf(info->uri, "rtsp://%s:%d/%d/%d", _IPAddr, port_info.rtsp_port, chs/2, chs%2);
+    //sprintf(info->uri, "rtsp://%s:%d/%d/%d", _IPAddr, port_info.rtsp_port, chs/2, chs%2);
+    sprintf(info->uri, "rtsp://%s:%d/%d/1", _IPAddr, port_info.rtsp_port, chs/2);
 
     info->vcount = num;
     info->x = 0;

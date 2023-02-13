@@ -26,7 +26,7 @@ extern "C" {
 #include "sample_comm.h"
 
 #define BIG_STREAM_SIZE     PIC_2688x1944
-#define SMALL_STREAM_SIZE   PIC_VGA
+#define SMALL_STREAM_SIZE   PIC_1080P
 
 
 #define VB_MAX_NUM            10
@@ -384,8 +384,9 @@ HI_VOID SAMPLE_VENC_GetDefaultVpssAttr(SAMPLE_SNS_TYPE_E enSnsType, HI_BOOL *pCh
             pVpssAttr->enCompressMode[i]          = (i == 0)? COMPRESS_MODE_SEG : COMPRESS_MODE_NONE;
             pVpssAttr->stOutPutSize[i].u32Width   = stEncSize[i].u32Width;
             pVpssAttr->stOutPutSize[i].u32Height  = stEncSize[i].u32Height;
-            pVpssAttr->stFrameRate[i].s32SrcFrameRate  = -1;
-            pVpssAttr->stFrameRate[i].s32DstFrameRate  = -1;
+            /* fps_change ; defalut -1 -1 */
+            pVpssAttr->stFrameRate[i].s32SrcFrameRate  = 30;
+            pVpssAttr->stFrameRate[i].s32DstFrameRate  = 15;
             pVpssAttr->bMirror[i]                      = HI_FALSE;
             pVpssAttr->bFlip[i]                        = HI_FALSE;
 
@@ -929,7 +930,7 @@ HI_S32 SAMPLE_VENC_ModifyResolution(SAMPLE_SNS_TYPE_E   enSnsType,PIC_SIZE_E *pe
 /******************************************************************************
 * function: H.265e + H264e@720P, H.265 Channel resolution adaptable with sensor
 ******************************************************************************/
-HI_S32 SAMPLE_VENC_H265_H264(void)
+HI_S32 SAMPLE_VENC_H265_H264(int runflg)
 {
     HI_S32 i;
     HI_S32 s32Ret;
@@ -964,8 +965,9 @@ HI_S32 SAMPLE_VENC_H265_H264(void)
             return s32Ret;
         }
     }
-
+    memset(&stViConfig, 0, sizeof(stViConfig));
     SAMPLE_COMM_VI_GetSensorInfo(&stViConfig);
+    printf("panyao:vi=%d\r\n", stViConfig.astViInfo[0].stSnsInfo.enSnsType);
     if(SAMPLE_SNS_TYPE_BUTT == stViConfig.astViInfo[0].stSnsInfo.enSnsType)
     {
         SAMPLE_PRT("Not set SENSOR%d_TYPE !\n",0);
@@ -1005,6 +1007,8 @@ HI_S32 SAMPLE_VENC_H265_H264(void)
     stViConfig.astViInfo[0].stChnInfo.enDynamicRange = DYNAMIC_RANGE_SDR8;
     stViConfig.astViInfo[0].stChnInfo.enPixFormat    = PIXEL_FORMAT_YVU_SEMIPLANAR_420;
 
+    //stViConfig.astViInfo[0].stPipeInfo.enPixFmt = 19;
+    printf("panyao: %d\r\n", stViConfig.astViInfo[0].stPipeInfo.enPixFmt);
     s32Ret = SAMPLE_VENC_VI_Init(&stViConfig, stParam.ViVpssMode);
     if(s32Ret != HI_SUCCESS)
     {
@@ -1030,9 +1034,14 @@ HI_S32 SAMPLE_VENC_H265_H264(void)
     start stream venc
     ******************************************/
 
-    enRcMode = SAMPLE_VENC_GetRcMode();
+    if (runflg){
+        enRcMode = SAMPLE_RC_CBR;
+        enGopMode = VENC_GOPMODE_NORMALP;
+    }else{
+        enRcMode = SAMPLE_VENC_GetRcMode();
+        enGopMode = SAMPLE_VENC_GetGopMode();
+    }
 
-    enGopMode = SAMPLE_VENC_GetGopMode();
     s32Ret = SAMPLE_COMM_VENC_GetGopAttr(enGopMode,&stGopAttr);
     if (HI_SUCCESS != s32Ret)
     {
@@ -1080,6 +1089,7 @@ HI_S32 SAMPLE_VENC_H265_H264(void)
         goto EXIT_VENC_H264_UnBind;
     }
 
+    if (runflg)return 0;
     printf("please press twice ENTER to exit this sample\n");
     getchar();
     getchar();
@@ -2297,7 +2307,7 @@ EXIT_VI_STOP:
             s32Ret = SAMPLE_VENC_Ring();
             break;
         case 1:
-            s32Ret = SAMPLE_VENC_H265_H264();
+            s32Ret = SAMPLE_VENC_H265_H264(0);
             break;
         case 2:
             s32Ret = SAMPLE_VENC_Qpmap();

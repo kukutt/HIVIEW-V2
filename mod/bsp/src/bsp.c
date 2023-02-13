@@ -41,6 +41,7 @@ static int log_recv(char *msg, int size, int err)
       f = open(logfile[1], O_RDWR|O_CREAT|O_TRUNC, 0766); close(f);
       f = open(logfile[2], O_RDWR|O_CREAT|O_TRUNC, 0766); close(f);
       f = open(logfile[l], O_RDWR|O_CREAT|O_TRUNC, 0766);
+      system("ln -s /tmp/log0.log /tmp/log");
     }
     
     if(f)
@@ -53,7 +54,10 @@ static int log_recv(char *msg, int size, int err)
         if(fstat(f, &st) == 0 && st.st_size > 128*1024)
         {
           close(f);
+          char cmd[64];
           f = open(logfile[++l%3], O_RDWR|O_CREAT|O_TRUNC, 0766);
+          snprintf(cmd, sizeof(cmd), "rm /tmp/log ; ln -s %s /tmp/log", logfile[l%3]);
+          system(cmd);
         }
       }
     }
@@ -214,9 +218,14 @@ int main(int argc, char *argv[])
     
     sadp_init();
     
+    int ntp_cont = 0;
     while(1)
     {
         sleep(6);
+        if (ntp_cont<30){
+            ntp_set(&bsp_parm.ntp);
+            ntp_cont++;
+        }
         
         #if 0 //test get netlink status;
         int stat = netcfg_netlink_status("eth0");

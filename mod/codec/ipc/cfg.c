@@ -14,8 +14,8 @@ gsf_codec_ipc_t codec_ipc = {
         .width  = 3840,
         .height = 2160,
         #elif defined(GSF_CPU_3516e)
-        .width  = 1280,
-        .height = 720,
+        .width  = 2592,
+        .height = 1520,
         #else
         .width  = 1920,
         .height = 1080,
@@ -30,13 +30,8 @@ gsf_codec_ipc_t codec_ipc = {
     [1] = {
         .en     = 1,
         .type   = 0,
-        #if defined(GSF_CPU_3516e)
-        .width  = 640,
-        .height = 480,
-        #else
         .width  = 1280,
         .height = 720,
-        #endif
         .fps    = 30,
         .gop    = 30,
         .flow   = 0,
@@ -66,7 +61,7 @@ gsf_codec_ipc_t codec_ipc = {
     }
   },
   .aenc = {
-    .en = 0, .type = GSF_ENC_AAC, .sprate = 48, .vol = 50,
+    .en = 1, .type = GSF_ENC_G711A, .sprate = 8, .vol = 50,
   },
   
   .lenscfg = {
@@ -75,7 +70,9 @@ gsf_codec_ipc_t codec_ipc = {
   },
   
   .osd = {
-    [0] = {},
+    [7] = {
+      .en = 1,
+    },
   },
   .vmask = {
     [0] = {},

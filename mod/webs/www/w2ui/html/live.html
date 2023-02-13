@@ -25,7 +25,7 @@ function flv_load() {
         //cors: true,
         hasAudio: audio,
         autoCleanupSourceBuffer:true,
-        url: (ishttps == true?'wss://':'ws://') + window.location.hostname + (ishttps == true?':443/flv':':80/flv') + streamx,
+        url: (ishttps == true?'wss://':'ws://') + window.location.hostname + ':'+ window.location.port + '/flv' + streamx,
     }
         console.log('MediaDataSource', mediaDataSource);
         var element = document.getElementsByName('videoElement')[0];

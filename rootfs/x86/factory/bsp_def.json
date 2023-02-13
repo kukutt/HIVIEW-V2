@@ -1,0 +1,42 @@
+{
+	"board":	{
+		"model":	"IPC123",
+		"sn":	"123456",
+		"type":	"HI3516DV300_E_4_2",
+		"snscnt":	1,
+		"sensor":	["imx335", "", "", "4", "", "", "", ""],
+		"caps":	"ffffffff"
+	},
+	"base":	{
+		"name":	"HIVIEW",
+		"language":	0,
+		"zone":	-480,
+		"mcastdev":	"eth0"
+	},
+	"eth":	{
+		"dhcp":	1,
+		"ipv6":	0,
+		"ipaddr":	"192.168.31.217",
+		"netmask":	"255.255.255.0",
+		"gateway":	"192.168.31.1",
+		"dns1":	"192.168.31.1",
+		"dns2":	"192.168.31.1",
+		"mac":	""
+	},
+	"wifi":	{
+		"en":	0,
+		"ap":	0,
+		"ssid":	"",
+		"pwd":	""
+	},
+	"ntp":	{
+		"prog":	600,
+		"server1":	"server 0.cn.pool.ntp.org",
+		"server2":	"server 1.cn.pool.ntp.org"
+	},
+	"admin":	{
+		"name":	"admin",
+		"pwd":	"",
+		"caps":	"0"
+	}
+}

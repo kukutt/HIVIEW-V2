@@ -358,13 +358,43 @@ int disk_format(gsf_disk_f_t *f)
     return 0;
 }
 
+static int disk_check_mount(const char *mnt_dir, const char *dev_name)
+{
+  int ret = -1;
+  FILE *pp = popen("mount", "r");
+  if (!pp){
+    return ret;
+  }
+  if (0 == strlen(mnt_dir)){
+    return ret;
+  }
+  if (0 == strlen(dev_name)){
+    return ret;
+  }
+  char tmp[1024];
+  while(fgets(tmp, sizeof(tmp), pp) != NULL){
+    do{
+      if (NULL == strstr(tmp, mnt_dir))break;
+      if (NULL == strstr(tmp, dev_name))break;
+      printf("find %s\r\n", tmp);
+      ret = 0;
+    }while(0);
+    if (ret == 0)break;
+  }
+  pclose(pp);
 
+  return ret;
+}
 
 int disk_mount(gsf_disk_t *d)
 {
   if(!strlen(d->mnt_dir))
   {
     return -2;
+  }
+
+  if (0 == disk_check_mount(d->mnt_dir, d->dev_name)){
+    return 0;
   }
   
   if(strlen(d->dev_name))

@@ -157,7 +157,7 @@ int gsf_mpp_cfg(char *path, gsf_mpp_cfg_t *cfg)
     sprintf(loadstr, "%s/ko/load3516ev200 -i -sensor0 %s -yuv0 1", path, "sc4236"); // 24M;
   }
   else
-    sprintf(loadstr, "%s/ko/load3516ev200 -i -sensor0 %s", path, cfg->snsname);
+    sprintf(loadstr, "%s/ko/load3516ev300 -i -sensor0 %s -osmem 64M", path, cfg->snsname);
   
   printf("%s => loadstr: %s\n", __func__, loadstr);
   system(loadstr);
@@ -544,4 +544,47 @@ int gsf_mpp_rgn_ctl(RGN_HANDLE Handle, int id, gsf_mpp_rgn_t *rgn)
 int gsf_mpp_rgn_bitmap(RGN_HANDLE Handle, BITMAP_S *bitmap)
 {
   return HI_MPI_RGN_SetBitMap(Handle, bitmap);
+}
+
+
+static gsf_mpp_aenc_t _aenc;
+int gsf_mpp_audio_start(gsf_mpp_aenc_t *aenc)
+{
+  static int init = 0;
+  
+  if(!init)
+  {
+    init = 1;
+    extern HI_S32 sample_audio_init();
+    sample_audio_init();
+  }
+  
+  if(aenc == NULL)
+  { //test ai->ao;
+    static pthread_t aio_pid;
+    extern HI_S32 SAMPLE_AUDIO_AiAo(HI_VOID);
+    return pthread_create(&aio_pid, 0, (void*(*)(void*))SAMPLE_AUDIO_AiAo, NULL);
+  }
+  else
+  {
+    extern HI_S32 SAMPLE_AUDIO_AiAenc(gsf_mpp_aenc_t *aenc);
+    
+    _aenc = *aenc;
+    return SAMPLE_AUDIO_AiAenc(aenc);
+  }
+  return 0;
+}
+
+int gsf_mpp_audio_stop(gsf_mpp_aenc_t *aenc)
+{
+  if(aenc == NULL)
+  {
+    ;  
+  }
+  else
+  {
+    extern HI_S32 SAMPLE_AUDIO_AiAencStop(gsf_mpp_aenc_t *aenc);
+    return SAMPLE_AUDIO_AiAencStop(aenc);
+  }
+  return 0;
 }

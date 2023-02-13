@@ -10,10 +10,17 @@ void* stat_task(void *parm)
 
   while(1)
   {
+#if defined(GSF_CPU_3516e) || defined(GSF_CPU_x86)
+    _cpu = 0;
+    _mem = 0;
+    _temp = 0;
+    _ddr = 0;
+#else
     _cpu = sstat_cpu_occupy(1);
     _mem = sstat_mem_occupy();
     _temp = sstat_cpu_temp(1);
     _ddr = sstat_ddr_occupy(3);
+#endif
     sleep(1);
   }
   return 0;

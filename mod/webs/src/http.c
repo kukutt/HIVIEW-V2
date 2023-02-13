@@ -1114,9 +1114,13 @@ static void* ws_task(void* parm)
   opts.error_string = &err;
   
   char www_path[128] = {0};
-  proc_absolute_path(www_path);
-  
-  sprintf(www_path, "%s/../www", www_path);
+
+  if(access("/tmp/www_root", 0) == -1){
+    proc_absolute_path(www_path);
+    sprintf(www_path, "%s/../www", www_path);
+  }else{
+    sprintf(www_path, "/tmp/www_root");
+  }
   printf("www_path:[%s]\n", www_path);
   s_http_server_opts.document_root = www_path;  // Serve current directory
   
@@ -1160,7 +1164,11 @@ static void* ws_task(void* parm)
   sprintf(ssl_key, "%s/key.pem", www_path);
   opts.ssl_cert = ssl_cert;
   opts.ssl_key  = ssl_key;
+#ifdef GSF_CPU_x86
+  https = mg_bind_opt(&mgr, "8443", ev_handler, opts);
+#else
   https = mg_bind_opt(&mgr, "443", ev_handler, opts);
+#endif
   if(https == NULL)
   {
     fprintf(stderr, "mg_bind(%s) failed: %s\n", "443", err);

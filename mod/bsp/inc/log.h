@@ -83,7 +83,7 @@ static inline void GSF_LOG_WRITE( int level
     va_start(ap,fmt);
     
     pthread_mutex_lock(&__log_mutex);
-    sprintf(__log_buf, COLOR_DARK_GRAY "%d:%s:%s:%s>" COLOR_NONE, level, mod_name,file_name,func_name);
+    sprintf(__log_buf, COLOR_WHITE "%d:%s:%s:%s>%ld|" COLOR_NONE, level, mod_name,file_name,func_name,time(NULL));
     int head_len = strlen(__log_buf);
     vsnprintf(__log_buf+head_len, __log_buf_size-head_len, fmt, ap);
     if(__log_flag)

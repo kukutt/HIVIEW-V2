@@ -1,13 +1,18 @@
+#include <time.h>
 #include "mpp.h"
 #include "rgn.h"
 #include "cfg.h"
 
 static gsf_rgn_ini_t rgn_ini = {.ch_num = 1, .st_num = 2};
+static void* gsf_rgn_osd_time_thread(void *parm);
+static pthread_t gsf_rgn_osd_time_thread_tid;
+static gsf_osd_t g_time_osd;
 
 int gsf_rgn_init(gsf_rgn_ini_t *ini)
 {
   if(ini)
     rgn_ini = *ini;
+  pthread_create(&gsf_rgn_osd_time_thread_tid, NULL, gsf_rgn_osd_time_thread, (void*)NULL);
   return 0;
 }
 
@@ -312,6 +317,28 @@ static int codec_venc_height(int ch, int i)
 
 //#define __RGN_CANVAS // __RGN_CANVAS is bad
 
+static void* gsf_rgn_osd_time_thread(void *parm)
+{
+  time_t old_time = time(NULL);
+  time_t now_time = time(NULL);
+  char buf[128];
+  struct tm* local;
+  while(1){
+    if (g_time_osd.en){
+      now_time = time(NULL);
+      if (old_time < now_time){
+        local = localtime(&now_time);
+        strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", local);
+        snprintf(g_time_osd.text, sizeof(g_time_osd.text), "%s", buf);
+        gsf_rgn_osd_set(0, 7, &g_time_osd);
+        old_time = now_time;
+      }
+      usleep(100000);
+    }else{
+      sleep(1);
+    }
+  }
+}
 int gsf_rgn_osd_set(int ch, int idx, gsf_osd_t *_osd)
 {
   
@@ -319,6 +346,12 @@ int gsf_rgn_osd_set(int ch, int idx, gsf_osd_t *_osd)
   unsigned int ARG1555_RED = argb8888_1555(0x01FF0000);
   gsf_osd_t __osd = *_osd;
   gsf_osd_t *osd = &__osd;
+  if ((&g_time_osd != _osd) && (ch == 0) && (idx == 7)){
+    memcpy((char *)&g_time_osd, (char *)osd, sizeof(*osd));
+    printf("[OSDDEV]gsf_rgn_osd_set %d [%d %d][%d %d %d %dx%d %dx%d %s]\r\n", time(NULL), ch, idx, osd->en, osd->type, osd->fontsize, osd->point[0], osd->point[1], osd->wh[0], osd->wh[1], osd->text);
+  }
+  
+  
   
   for(i = 0; i < GSF_CODEC_VENC_NUM; i++)
   {
