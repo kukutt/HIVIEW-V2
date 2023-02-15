@@ -6,7 +6,11 @@
 char webs_parm_path[128] = {0};
 
 gsf_webs_cfg_t webs_cfg = {
+#if defined(GSF_CPU_x86)
+  .port = 8080,
+#else
   .port = 80,
+#endif
   .auth = 0,
 };
 

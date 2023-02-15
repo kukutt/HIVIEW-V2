@@ -29,6 +29,8 @@ ln -s $workPath/mod/webs/www $workPath/bin/www
 
 rm /tmp/log*.log /tmp/log
 
+[ -f /tmp/test.h264 ] || ffmpeg -f lavfi -i testsrc=size=1280x720:rate=30 -c:v h264 -g 30 -t 30 -f h264 /tmp/test.h264
+
 mkdir -p $homePath/cfg/
 bsp.exe     $homePath/factory/bsp_def.json $homePath/cfg/bsp_parm.json > /dev/null 2>&1 &
 codec.exe  $homePath/cfg/codec_parm.json > /dev/null 2>&1 &

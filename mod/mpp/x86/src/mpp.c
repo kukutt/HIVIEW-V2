@@ -76,16 +76,27 @@ void* gsf_venc_pthread(void *u){
 
             offset = 0;
             int i = 0;
+            int spsflg = 0;
+            int ppsflg = 0;
             while(i < 8){
                 ret = simplest_h264_parser_one(fp, (char *)&buf[offset], max_len, &len, &type);
-                // fprintf(stdout,"|%8d|%8d|%02x%02x%02x%02x%02x%02x%02x|%8d|%d\r\n",len, type, \
-                //     buf[0], buf[1], buf[2], buf[3], buf[4], buf[5], buf[6], totallen, ret);
+                fprintf(stdout,"|%8d|%8d|%02x%02x%02x%02x%02x%02x%02x|%8d|%d\r\n",len, type, \
+                     buf[offset+0], buf[offset+1], buf[offset+2], buf[offset+3], buf[offset+4], buf[offset+5], buf[offset+6], totallen, ret);
                 if (ret == 0)totallen += len;
                 if ((feof(fp) != 0) || (ret != 0)){
                     printf("[%d]SEEK_SET totallen=%d, type=%d\r\n", p->VeChn, totallen, type);
                     fseek(fp, 0, SEEK_SET);
                     totallen = 0;
                     break;
+                }
+                if (type == 6)continue;
+                if (type == 7){
+                    if (spsflg == 1)continue;
+                    spsflg = 1;
+                }
+                if (type == 8){
+                if (ppsflg == 1)continue;
+                    ppsflg = 1;
                 }
                 pack[i].u32Len = len;
                 pack[i].u32Offset = 0;
@@ -122,7 +133,7 @@ int gsf_mpp_venc_recv(gsf_mpp_recv_t *recv){
         //printf("venc recv [%d]\r\n", i, recv->VeChn);
         memset((char *)&pthread_param[i], 0, sizeof(venc_pthread_param));
         pthread_param[i].VeChn = recv->VeChn[i];
-        pthread_param[i].filename = "/tmp/cap.h264";
+        pthread_param[i].filename = "/tmp/test.h264";
         pthread_param[i].uargs = recv->uargs;
         pthread_param[i].cb = recv->cb;
         pthread_create(&pthread_param[i].read_thread, NULL, gsf_venc_pthread, &pthread_param[i]);
