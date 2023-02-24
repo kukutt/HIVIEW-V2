@@ -1,0 +1,6 @@
+{
+	"port":	8080,
+	"auth":	0,
+	"webrtc_en":	0,
+	"webrtc_url":	"wss://kukutt.glitch.me/hiview-camera-xxxxx"
+}

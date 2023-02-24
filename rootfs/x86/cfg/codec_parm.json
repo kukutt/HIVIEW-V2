@@ -1,0 +1,215 @@
+{
+	"vi":	{
+		"wdr":	0,
+		"fps":	0,
+		"res":	0,
+		"avs":	0,
+		"lowdelay":	0,
+		"hnr":	0
+	},
+	"vo":	{
+		"intf":	0,
+		"sync":	0
+	},
+	"aenc":	{
+		"en":	1,
+		"type":	6,
+		"stereo":	0,
+		"sprate":	8,
+		"vol":	50
+	},
+	"lenscfg":	{
+		"lens":	0,
+		"uart":	"ttyAMA2",
+		"ircut":	0
+	},
+	"vdec":	{
+		"en":	0,
+		"rtsp":	""
+	},
+	"venc":	[{
+			"en":	1,
+			"type":	0,
+			"width":	1920,
+			"height":	1080,
+			"fps":	30,
+			"gop":	30,
+			"flow":	0,
+			"bitrate":	8000,
+			"profile":	0,
+			"qp":	0,
+			"lowdelay":	0
+		}, {
+			"en":	1,
+			"type":	0,
+			"width":	1280,
+			"height":	720,
+			"fps":	30,
+			"gop":	30,
+			"flow":	0,
+			"bitrate":	2000,
+			"profile":	0,
+			"qp":	0,
+			"lowdelay":	0
+		}, {
+			"en":	1,
+			"type":	3,
+			"width":	1920,
+			"height":	1080,
+			"fps":	30,
+			"gop":	30,
+			"flow":	0,
+			"bitrate":	2000,
+			"profile":	0,
+			"qp":	0,
+			"lowdelay":	0
+		}],
+	"osd":	[{
+			"en":	0,
+			"type":	0,
+			"fontsize":	0,
+			"point":	[0, 0],
+			"wh":	[0, 0],
+			"text":	""
+		}, {
+			"en":	0,
+			"type":	0,
+			"fontsize":	0,
+			"point":	[0, 0],
+			"wh":	[0, 0],
+			"text":	""
+		}, {
+			"en":	0,
+			"type":	0,
+			"fontsize":	0,
+			"point":	[0, 0],
+			"wh":	[0, 0],
+			"text":	""
+		}, {
+			"en":	0,
+			"type":	0,
+			"fontsize":	0,
+			"point":	[0, 0],
+			"wh":	[0, 0],
+			"text":	""
+		}, {
+			"en":	0,
+			"type":	0,
+			"fontsize":	0,
+			"point":	[0, 0],
+			"wh":	[0, 0],
+			"text":	""
+		}, {
+			"en":	0,
+			"type":	0,
+			"fontsize":	0,
+			"point":	[0, 0],
+			"wh":	[0, 0],
+			"text":	""
+		}, {
+			"en":	0,
+			"type":	0,
+			"fontsize":	0,
+			"point":	[0, 0],
+			"wh":	[0, 0],
+			"text":	""
+		}, {
+			"en":	1,
+			"type":	0,
+			"fontsize":	0,
+			"point":	[0, 0],
+			"wh":	[0, 0],
+			"text":	""
+		}],
+	"vmask":	[{
+			"en":	0,
+			"rect":	[0, 0, 0, 0],
+			"color":	0
+		}, {
+			"en":	0,
+			"rect":	[0, 0, 0, 0],
+			"color":	0
+		}, {
+			"en":	0,
+			"rect":	[0, 0, 0, 0],
+			"color":	0
+		}, {
+			"en":	0,
+			"rect":	[0, 0, 0, 0],
+			"color":	0
+		}, {
+			"en":	0,
+			"rect":	[0, 0, 0, 0],
+			"color":	0
+		}, {
+			"en":	0,
+			"rect":	[0, 0, 0, 0],
+			"color":	0
+		}, {
+			"en":	0,
+			"rect":	[0, 0, 0, 0],
+			"color":	0
+		}, {
+			"en":	0,
+			"rect":	[0, 0, 0, 0],
+			"color":	0
+		}],
+	"img":	{
+		"magic":	0,
+		"scene":	{
+			"bEnable":	0
+		},
+		"csc":	{
+			"bEnable":	0,
+			"u8Hue":	0,
+			"u8Luma":	0,
+			"u8Contr":	0,
+			"u8Satu":	0
+		},
+		"ae":	{
+			"bEnable":	0,
+			"u8Speed":	0,
+			"u8Compensation":	0,
+			"SysGainRangeMax":	0,
+			"SysGainRangeMin":	0,
+			"ExpTimeRangeMax":	0,
+			"ExpTimeRangeMin":	0
+		},
+		"dehaze":	{
+			"bEnable":	0,
+			"u8strength":	0
+		},
+		"sharpen":	{
+			"bEnable":	0,
+			"u16TextureFreq":	0,
+			"u16EdgeFreq":	0,
+			"u8DetailCtrl":	0
+		},
+		"hlc":	{
+			"bEnable":	0,
+			"u8LumaThr":	0,
+			"u8LumaTarget":	0
+		},
+		"gamma":	{
+			"bEnable":	0,
+			"enCurveType":	0,
+			"TableNo":	0
+		},
+		"drc":	{
+			"bEnable":	0,
+			"u16Strength":	0,
+			"u16StrengthMax":	0,
+			"u16StrengthMin":	0
+		},
+		"ldci":	{
+			"bEnable":	0,
+			"u16BlcCtrl":	0,
+			"stHePosWgt_u8Wgt":	0,
+			"stHeNegWgt_u8Mean":	0
+		},
+		"_3dnr":	{
+			"bEnable":	0,
+			"u8strength":	0
+		}
+	}
+}
