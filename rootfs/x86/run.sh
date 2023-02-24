@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 
 killfn(){
     killall -9 bsp.exe codec.exe rtsps.exe webs.exe
