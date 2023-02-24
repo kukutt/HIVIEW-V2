@@ -758,6 +758,17 @@ void mpp_ini_3516e(gsf_mpp_cfg_t *cfg, gsf_rgn_ini_t *rgn_ini, gsf_venc_ini_t *v
 }
 #endif
 
+#if defined(GSF_CPU_3520d)
+void mpp_ini_3520d(gsf_mpp_cfg_t *cfg, gsf_rgn_ini_t *rgn_ini, gsf_venc_ini_t *venc_ini, gsf_mpp_vpss_t *vpss)
+{
+  // sc2335-0-0-2-30
+  cfg->lane = 0; cfg->wdr = 0; cfg->res = 4; cfg->fps = 30;
+  rgn_ini->ch_num = 1; rgn_ini->st_num = 2;
+  venc_ini->ch_num = 1; venc_ini->st_num = 2;
+  VPSS(0, 0, 0, 0, 1, 1, PIC_2592x1520, PIC_720P); 
+}
+#endif
+
 #if defined(GSF_CPU_3531d)
 void mpp_ini_3531d(gsf_mpp_cfg_t *cfg, gsf_rgn_ini_t *rgn_ini, gsf_venc_ini_t *venc_ini, gsf_mpp_vpss_t *vpss)
 {
@@ -860,6 +871,10 @@ int mpp_start(gsf_bsp_def_t *def)
       #elif defined(GSF_CPU_3516e)
       {
         mpp_ini_3516e(&cfg, &rgn_ini, &venc_ini, vpss);
+      }
+      #elif defined(GSF_CPU_3520d)
+      {
+        mpp_ini_3520d(&cfg, &rgn_ini, &venc_ini, vpss);
       }
       #elif defined(GSF_CPU_3519)
       {

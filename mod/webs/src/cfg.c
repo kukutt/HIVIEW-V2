@@ -12,6 +12,8 @@ gsf_webs_cfg_t webs_cfg = {
   .port = 80,
 #endif
   .auth = 0,
+  .webrtc_en = 0,
+  .webrtc_url = "wss://kukutt.glitch.me/hiview-camera-xxxxx",
 };
 
 int json_parm_load(char *filename, gsf_webs_cfg_t *cfg)
