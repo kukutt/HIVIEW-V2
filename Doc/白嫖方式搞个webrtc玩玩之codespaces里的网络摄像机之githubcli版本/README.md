@@ -38,7 +38,7 @@
 
 # 开始狂飙~
 
-基本上GitHubCLI基于选择交互方式, 此处录个视频说明。可以输入`./gh.exe codespace`查看帮助
+基本上GitHubCLI基于选择交互方式, 此处录个[视频](https://www.bilibili.com/video/BV1fM411L73p)说明。可以输入`./gh.exe codespace`查看帮助
 
 ![8](pic/8.png)
 
