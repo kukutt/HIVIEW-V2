@@ -32,7 +32,7 @@ codespaces是一个github发布一个非常优秀集IDE/编译/调试的虚拟�
 sudo apt-get update
 # 原项目的x86平台用32位编辑的, 故如果64位系统需要做兼容
 sudo apt-get install gcc-multilib g++-multilib build-essential module-assistant
-# 由于x86使用ffmpeg产生测试视频使用, 如果你有其他视频.h264文件, 可以忽略
+# 使用ffmpeg产生测试视频使用, 如果你有其他视频.h264文件, 可以忽略
 sudo apt-get install ffmpeg
 ```
 
