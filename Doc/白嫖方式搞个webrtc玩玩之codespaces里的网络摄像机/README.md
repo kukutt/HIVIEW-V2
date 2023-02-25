@@ -14,19 +14,19 @@ codespaces是一个github发布一个非常优秀集IDE/编译/调试的虚拟�
 # 开始吧~
 ## 开启codespaces
 
-![1](pic\1.png)
+![1](pic/1.png)
 
-![2](pic\2.png)
+![2](pic/2.png)
 
-![3](pic\3.png)
+![3](pic/3.png)
 
-![4](pic\4.png)
+![4](pic/4.png)
 
 ## 环境准备
 
 经过一段时间等待，codespaces创建完成，就是一个网页版的VScode，终端可以输入命令，先准备一下环境吧~
 
-![5](E:\HIVIEW-V2\Doc\入门\pic\5.png)
+![5](pic/5.png)
 
 ```
 sudo apt-get update
@@ -47,7 +47,7 @@ make
 
 需要修改一下webrtc url, 如下图
 
-![6](E:\HIVIEW-V2\Doc\入门\pic\6.png)
+![6](pic/6.png)
 
 ## 运行
 
@@ -65,6 +65,6 @@ rootfs/x86/run.sh kill
 1. 打开网址[https://kukutt.glitch.me/](https://kukutt.glitch.me/)
 2. 输入中[修改webrtc的地址章节](#修改webrtc的地址)中的webrtc_url后缀
 
-![7](E:\HIVIEW-V2\Doc\入门\pic\7.png)
+![7](pic/7.png)
 
-![8](E:\HIVIEW-V2\Doc\入门\pic\8.png)
+![8](pic/8.png)
