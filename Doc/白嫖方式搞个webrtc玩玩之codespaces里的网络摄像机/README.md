@@ -7,7 +7,7 @@ codespaces是一个github发布一个非常优秀集IDE/编译/调试的虚拟�
 当然, 建议还是使用自己虚拟机or开发板来实现这一系列研究和学习   
 
 # 参考资料
-* [HIVIEW2](https://github.com/kukutt/hiview) : 基于openhisilicon/HIVIEW做了一些修改, 主要目的增加其他平台支持(第一站x86)
+* [HIVIEW2](https://github.com/kukutt/HIVIEW-V2) : 基于openhisilicon/HIVIEW做了一些修改, 主要目的增加其他平台支持(第一站x86)
 * [openhisilicon/HIVIEW](https://github.com/openhisilicon/HIVIEW) : 原始的开源网络摄像头项目（感谢提供这么优秀的项目）, 目前仅支持海思平台
 * [视频教程](https://space.bilibili.com/582757748?spm_id_from=333.337.search-card.all.click) : 也是原项目作者的视频教程（再次感谢~）
 
