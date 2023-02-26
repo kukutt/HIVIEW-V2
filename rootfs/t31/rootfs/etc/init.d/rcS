@@ -1,0 +1,43 @@
+#!/bin/sh
+
+# Set mdev
+echo /sbin/mdev > /proc/sys/kernel/hotplug
+/sbin/mdev -s && echo "mdev is ok......"
+
+# create console and null node for nfsroot
+#mknod -m 600 /dev/console c 5 1
+#mknod -m 666 /dev/null c 1 3
+
+# Set Global Environment
+. /etc/profile
+#export PATH=/bin:/sbin:/usr/bin:/usr/sbin
+#export PATH=/system/bin:$PATH
+#export LD_LIBRARY_PATH=/system/lib:/board/lib/
+
+# networking
+ifconfig lo up
+#ifconfig eth0 192.168.1.80
+
+# Read only 
+#cp /etc/shadow.only /tmp/shadow
+#cp /etc/passwd.only /tmp/passwd
+
+# Start telnet daemon
+telnetd &
+dropbear
+
+# Set the system time from the hardware clock
+#hwclock -s
+
+#add rtsp send encoder buffer
+sysctl -w net.core.wmem_max=26214400
+sysctl -w net.core.wmem_default=26214400
+
+# Mount system partition
+mount -t jffs2 /dev/mtdblock3 /board
+
+# Run init script
+if [ -f /board/run.sh ]; then
+    chmod 777 /board/run.sh
+    /board/run.sh &
+fi
